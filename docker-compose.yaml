@@ -1,0 +1,55 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tech_store_app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+    networks:
+      - tech_store_network
+
+  db:
+    image: mysql:8.0
+    container_name: tech_store_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-sistema_db}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_USER: ${DB_USER:-sistema_db_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-sistema_db_pass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/sistema_db.sql:/docker-entrypoint-initdb.d/sistema_db.sql:ro
+    networks:
+      - tech_store_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: tech_store_phpmyadmin
+    restart: unless-stopped
+    platform: linux/x86_64
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    depends_on:
+      - db
+    networks:
+      - tech_store_network
+
+networks:
+  tech_store_network:
+    driver: bridge
+
+volumes:
+  db_data:
