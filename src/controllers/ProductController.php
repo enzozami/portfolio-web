@@ -20,10 +20,8 @@ class ProductController
     {
         $this->listAction->handle(
             descending: filter_var($params['descending'] ?? false, FILTER_VALIDATE_BOOLEAN),
-            sortBy: (string) $params['sortBy'],
-            active: isset($params['ativo']) && $params['ativo'] !== ''
-                ? $params['ativo'] === '1'
-                : null,
+            sortBy: $params['sortBy'] ?? 'nome',
+            active: filter_var($params['ativo'] ?? 1, FILTER_VALIDATE_BOOLEAN)
         );
     }
 
@@ -100,5 +98,10 @@ class ProductController
         }
 
         return $errors;
+    }
+
+    public function form(): void
+    {
+        require __DIR__ . '/../../public/views/form.php';
     }
 }

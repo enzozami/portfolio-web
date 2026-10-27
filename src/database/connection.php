@@ -8,7 +8,7 @@ function connection(): PDO
         return $pdo;
     }
 
-    $host = getenv('DB_HOST') ?: '127.0.0.1';
+    $host = getenv('DB_HOST') ?: 'db';
     $port = getenv('DB_PORT') ?: '3306';
     $db = getenv('DB_DATABASE') ?: 'sistema_db';
     $user = getenv('DB_USERNAME') ?: 'sistema_db_user';
