@@ -9,18 +9,16 @@ class ListProductAction
         $this->pdo = connection();
     }
 
-    private const array SORTABLE = ['id', 'nome', 'marca', 'cor', 'valor', 'ativo'];
+    private const SORTABLE = ['id', 'nome', 'marca', 'cor', 'valor', 'ativo'];
 
-
-
-    public function handle(bool $descending, string $sortBy, bool $active): array
+    public function handle(bool $descending, string $sortBy, int $active): array
     {
         $sortBy = in_array($sortBy, self::SORTABLE) ? $sortBy : 'nome';
         $direction = $descending ? 'DESC' : 'ASC';
 
-        $sql = "SELECT * FROM produtos ORDER BY :sortBy :direction WHERE ativo = :active";
+        $sql = "SELECT * FROM produtos WHERE ativo = :active ORDER BY {$sortBy} {$direction}";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':sortBy' => $sortBy, ':direction' => $direction, ':active' => $active]);
+        $stmt->execute([':active' => $active]);
         return $stmt->fetchAll();
     }
 }
