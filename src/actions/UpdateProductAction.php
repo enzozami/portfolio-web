@@ -1,13 +1,11 @@
 <?php
 
-require_once __DIR__ . '/../src/database/connection.php';
-require_once __DIR__ . '/../src/dto/ProductDto.php';
+require_once __DIR__ . '/../database/connection.php';
+require_once __DIR__ . '/../dto/ProductDto.php';
 
 class UpdateProductAction
 {
-    private PDO $pdo;
-
-    public function __construct()
+    public function __construct(private PDO $pdo)
     {
         $this->pdo = connection();
     }

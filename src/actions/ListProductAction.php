@@ -1,22 +1,26 @@
 <?php
 
-require_once __DIR__ . '/../src/database/connection.php';
+require_once __DIR__ . '/../database/connection.php';
 
 class ListProductAction
 {
-    private PDO $pdo;
-
-    public function __construct()
+    public function __construct(private PDO $pdo)
     {
         $this->pdo = connection();
     }
 
+    private const array SORTABLE = ['id', 'nome', 'marca', 'cor', 'valor', 'ativo'];
 
-    public function handle(String $direction, String $sortBy,): array
+
+
+    public function handle(bool $descending, string $sortBy, bool $active): array
     {
-        $sql = "SELECT * FROM produtos ORDER BY :sortBy :direction";
+        $sortBy = in_array($sortBy, self::SORTABLE) ? $sortBy : 'nome';
+        $direction = $descending ? 'DESC' : 'ASC';
+
+        $sql = "SELECT * FROM produtos ORDER BY :sortBy :direction WHERE ativo = :active";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':sortBy' => $sortBy, ':direction' => $direction]);
+        $stmt->execute([':sortBy' => $sortBy, ':direction' => $direction, ':active' => $active]);
         return $stmt->fetchAll();
     }
 }

@@ -1,12 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../src/database/connection.php';
+require_once __DIR__ . '/../database/connection.php';
 
 class DeleteProductAction
 {
-    private PDO $pdo;
-
-    public function __construct()
+    public function __construct(private PDO $pdo)
     {
         $this->pdo = connection();
     }
