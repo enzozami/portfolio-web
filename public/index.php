@@ -9,8 +9,6 @@ $routes = [
     'GET' => [
         'index' => 'index',
         'show' => 'show',
-        'create' => 'create',
-        'edit' => 'edit',
     ],
     'POST' => [
         'store'  => 'store',
@@ -35,8 +33,11 @@ $controller = new ProductController(
 match ($handler) {
     'index' => $controller->index($_GET),
     'show' => $controller->show((int) ($_GET['id'])),
+    'form' => $controller->form(),
     'store' => $controller->store($_POST),
     'update' => $controller->update((int) ($_POST['id']), $_POST),
     'delete' => $controller->destroy((int) ($_POST['id'])),
     default => $controller->index($_GET),
 };
+
+require __DIR__ . '/views/layout.php';
