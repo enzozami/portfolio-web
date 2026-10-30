@@ -1,13 +1,5 @@
-/*
- * Tech Store: estilos próprios.
- *
- * Carregado depois do Bootstrap: aqui ficam a identidade visual (cores, fonte)
- * e os componentes que o Bootstrap não tem pronto (botão flutuante, cabeçalho).
- */
 
-/* ---------- Identidade visual ---------- */
 :root {
-    /* Paleta: azul-ardósia escuro (tecnologia, sobriedade) + índigo como cor de ação */
     --ts-dark: #1e293b;
     --ts-dark-2: #334155;
     --ts-primary: #4f46e5;
@@ -18,7 +10,6 @@
     --ts-muted: #64748b;
     --ts-radius: 0.75rem;
 
-    /* Fonte Inter (Google Fonts) para todo o Bootstrap */
     --bs-body-font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --bs-body-bg: var(--ts-bg);
     --bs-link-color-rgb: 79, 70, 229;
@@ -118,7 +109,6 @@ body {
 
 /* ---------- Botão flutuante (FAB) ---------- */
 .fab {
-    /* fixed: sai do fluxo da página e fica preso ao canto da janela, mesmo rolando */
     position: fixed;
     right: 1.5rem;
     bottom: 1.5rem;
@@ -139,7 +129,6 @@ body {
     box-shadow: 0 12px 24px rgba(79, 70, 229, 0.45);
 }
 
-/* Espaço no fim da página para o FAB não cobrir o último item da tabela */
 main:has(+ .fab) {
     padding-bottom: 5rem;
 }
@@ -156,7 +145,6 @@ main:has(+ .fab) {
     }
 }
 
-/* Respeita quem pediu menos animação no sistema operacional */
 @media (prefers-reduced-motion: reduce) {
     .fab {
         transition: none;
