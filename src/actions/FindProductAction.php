@@ -1,13 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../database/connection.php';
-
 class FindProductAction
 {
-    public function __construct(private PDO $pdo)
-    {
-        $this->pdo = connection();
-    }
+    public function __construct(private PDO $pdo) {}
 
     public function handle(int $id)
     {

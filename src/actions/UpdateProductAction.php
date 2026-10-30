@@ -1,14 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../database/connection.php';
 require_once __DIR__ . '/../dto/ProductDto.php';
 
 class UpdateProductAction
 {
-    public function __construct(private PDO $pdo)
-    {
-        $this->pdo = connection();
-    }
+    public function __construct(private PDO $pdo) {}
 
     public function handle(int $id, ProductDto $dto)
     {

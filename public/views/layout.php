@@ -1,25 +1,3 @@
-<?php
-
-/**
- * Variáveis vindas do index.php:
- * @var string $route
- */
-if (!function_exists('e')) {
-    function e(mixed $value): string
-    {
-        return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-    }
-}
-
-$route = $route ?? 'index';
-$errors = getFormErrors();
-
-$view = match ($route) {
-    'create', 'edit' => 'form.php',
-    'show' => 'show.php',
-    default => 'list.php',
-};
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -48,27 +26,25 @@ $view = match ($route) {
                 <a class="navbar-brand fw-bold" href="index.php?route=index">
                     <i class="bi bi-cpu"></i> Tech Store
                 </a>
-                <a class="btn btn-warning btn-sm" href="index.php?route=create">
-                    <i class="bi bi-plus-lg"></i> Adicionar Produto
-                </a>
             </div>
         </nav>
     </header>
 
-    <main class="container py-5 flex-grow-1">
-        <?php if ($errors): ?>
-            <div class="alert alert-danger">
-                <strong>Verifique os dados informados:</strong>
-                <ul class="mb-0">
-                    <?php foreach ($errors as $error): ?>
-                        <li><?= e($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
-
-        <?php require __DIR__ . '/' . $view; ?>
+    <main class="flex-grow-1">
+        <div class="container py-4">
+            <?php if ($handler === 'index'): ?>
+                <?php require __DIR__ . '/list.php'; ?>
+            <?php elseif (in_array($handler, ['create', 'edit'])): ?>
+                <?php require __DIR__ . '/form.php'; ?>
+            <?php elseif ($handler === 'show'): ?>
+                <?php require __DIR__ . '/show.php'; ?>
+            <?php endif; ?>
+        </div>
     </main>
+
+    <div class="container">
+        <a class="btn btn-success btn-sm" href="/?route=create"> <i class="bi bi-plus-lg"></i> Adicionar Produto</a>
+    </div>
 
     <footer class="py-3 text-center text-muted small border-top bg-white">
         Tech Store &copy; <?= date('Y') ?>

@@ -1,5 +1,10 @@
 <?php
+$action = $isEdit ? "index.php?route=update" : "index.php?route=store";
 
+if (!$product) {
+    require __DIR__ . '/not-found.php';
+    return;
+}
 ?>
 
 <section class="row justify-content-center">
@@ -8,21 +13,21 @@
             <div class="card-body p-4">
                 <h1 class="h4 mb-4"><?= $isEdit ? 'Editar produto' : 'Novo produto' ?></h1>
 
-                <form action="<?= e($action) ?>" method="post" class="row g-3">
+                <form action="<?= escape($action) ?>" method="post" class="row g-3">
                     <?php if ($isEdit): ?>
-                        <input type="hidden" name="id" value="<?= e($product['id']) ?>">
+                        <input type="hidden" name="id" value="<?= escape($product['id']) ?>">
                     <?php endif; ?>
 
                     <div class="col-md-6">
                         <label for="nome" class="form-label">Nome</label>
-                        <input type="text" id="nome" name="nome" class="form-control" value="<?= e($product['nome']) ?>"
-                            minlength="3" maxlength="100" required>
+                        <input type="text" id="nome" name="nome" class="form-control"
+                            value="<?= escape($product['nome']) ?>" minlength="3" maxlength="100" required>
                     </div>
 
                     <div class="col-md-6">
                         <label for="marca" class="form-label">Marca</label>
                         <input type="text" id="marca" name="marca" class="form-control"
-                            value="<?= e($product['marca']) ?>" minlength="3" maxlength="100" required>
+                            value="<?= escape($product['marca']) ?>" minlength="3" maxlength="100" required>
                     </div>
 
                     <div class="col-md-6">
@@ -36,8 +41,8 @@
 
                     <div class="col-md-6">
                         <label for="cor" class="form-label">Cor</label>
-                        <input type="text" id="cor" name="cor" class="form-control" value="<?= e($product['cor']) ?>"
-                            maxlength="50" required>
+                        <input type="text" id="cor" name="cor" class="form-control"
+                            value="<?= escape($product['cor']) ?>" maxlength="50" required>
                     </div>
 
                     <div class="col-md-6">
@@ -45,7 +50,7 @@
                         <div class="input-group">
                             <span class="input-group-text">R$</span>
                             <input type="number" id="valor" name="valor" class="form-control"
-                                value="<?= e($product['valor']) ?>" step="0.01" min="0.01" required>
+                                value="<?= escape($product['valor']) ?>" step="0.01" min="0.01" required>
                         </div>
                     </div>
 

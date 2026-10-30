@@ -1,13 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../database/connection.php';
 
 class ListProductAction
 {
-    public function __construct(private PDO $pdo)
-    {
-        $this->pdo = connection();
-    }
+    public function __construct(private PDO $pdo) {}
 
     private const SORTABLE = ['id', 'nome', 'marca', 'cor', 'valor', 'ativo'];
 

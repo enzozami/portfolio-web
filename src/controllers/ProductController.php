@@ -16,16 +16,21 @@ class ProductController
         private DeleteProductAction $deleteAction,
     ) {}
 
-    public function index(array $params): void
+    public function index(array $params): array
     {
-        $this->listAction->handle(
-            descending: filter_var($params['descending'] ?? false, FILTER_VALIDATE_BOOLEAN),
-            sortBy: $params['sortBy'] ?? 'nome',
-            active: filter_var($params['ativo'] ?? 1, FILTER_VALIDATE_BOOLEAN)
+        $sortBy = $params['sortBy'] ?? 'nome';
+        $descending = filter_var($params['descending'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $active = filter_var($params['ativo'] ?? true, FILTER_VALIDATE_BOOLEAN);
+        $list =  $this->listAction->handle(
+            descending: $descending,
+            sortBy: $sortBy,
+            active: $active,
         );
+
+        return ['products' => $list, 'sortBy' => $sortBy, 'descending' => $descending, 'active' => $active];
     }
 
-    public function store(array $params): void
+    public function store(array $params): never
     {
         $errors = $this->validate($params, isEdit: false);
 
@@ -40,10 +45,10 @@ class ProductController
 
     public function show(int $id): array
     {
-        return $this->findAction->handle($id);
+        return ['product' => $this->findAction->handle($id)];
     }
 
-    public function update(int $id, array $input)
+    public function update(int $id, array $input): never
     {
         $errors = $this->validate($input, isEdit: true);
 
@@ -56,7 +61,7 @@ class ProductController
         redirect('index.php');
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): never
     {
         $this->deleteAction->handle($id);
         redirect('index.php');
@@ -100,8 +105,14 @@ class ProductController
         return $errors;
     }
 
-    public function form(): void
+    public function create(): array
     {
-        require __DIR__ . '/../../public/views/form.php';
+        $product = ['nome' => '', 'marca' => '',  'cor' => '', 'valor' => '', 'ativo' => 1];
+        return ['product' => $product, 'isEdit' => false];
+    }
+
+    public function edit(int $id): array
+    {
+        return ['product' => $this->findAction->handle($id), 'isEdit' => true];
     }
 }

@@ -15,10 +15,10 @@ class ProductDto
     public static function fromArray(array $data): self
     {
         return new self(
-            nome: trim($data['nome']->toString()),
-            marca: trim($data['marca']->toString()),
+            nome: trim($data['nome'] ?? ''),
+            marca: trim($data['marca'] ?? ''),
             senha: $data['senha'] ?? '',
-            cor: trim($data['cor']->toString()),
+            cor: trim($data['cor'] ?? ''),
             valor: (float) str_replace(',', '.', (string) ($data['valor'] ?? 0)),
             ativo: !empty($data['ativo']),
         );
@@ -31,7 +31,7 @@ class ProductDto
             'marca' => $this->marca,
             'cor' => $this->cor,
             'valor' => $this->valor,
-            'ativo' => $this->ativo,
+            'ativo' => (int) $this->ativo,
         ];
 
         if (!empty($this->senha)) {

@@ -1,16 +1,6 @@
 <?php
-$sortBy = $_GET['sortBy'] ?? 'nome';
-$descending = filter_var($_GET['descending'] ?? false, FILTER_VALIDATE_BOOLEAN);
-$active = filter_var($_GET['ativo'] ?? 1, FILTER_VALIDATE_BOOLEAN);
-
-$products = (new ListProductAction($pdo))->handle(
-    descending: $descending,
-    sortBy: $sortBy,
-    active: (int) $active
-);
-
 $columns = [
-    'id' => '#',
+    'id' => 'ID',
     'nome' => 'Nome',
     'marca' => 'Marca',
     'cor' => 'Cor',
@@ -51,8 +41,8 @@ $sortUrl = function (string $column) use ($sortBy, $descending, $active): string
                     <tr>
                         <?php foreach ($columns as $column => $label): ?>
                             <th scope="col">
-                                <a href="<?= e($sortUrl($column)) ?>" class="text-decoration-none text-dark">
-                                    <?= e($label) ?>
+                                <a href="<?= escape($sortUrl($column)) ?>" class="text-decoration-none text-dark">
+                                    <?= escape($label) ?>
                                     <?php if ($column === $sortBy): ?>
                                         <i class="bi bi-caret-<?= $descending ? 'down' : 'up' ?>-fill"></i>
                                     <?php endif; ?>
@@ -65,23 +55,23 @@ $sortUrl = function (string $column) use ($sortBy, $descending, $active): string
                 <tbody>
                     <?php foreach ($products as $product): ?>
                         <tr>
-                            <td><?= e($product['id']) ?></td>
-                            <td><?= e($product['nome']) ?></td>
-                            <td><?= e($product['marca']) ?></td>
-                            <td><?= e($product['cor']) ?></td>
+                            <td><?= escape($product['id']) ?></td>
+                            <td><?= escape($product['nome']) ?></td>
+                            <td><?= escape($product['marca']) ?></td>
+                            <td><?= escape($product['cor']) ?></td>
                             <td>R$ <?= number_format((float) $product['valor'], 2, ',', '.') ?></td>
                             <td class="text-end text-nowrap">
-                                <a href="index.php?route=show&id=<?= e($product['id']) ?>"
+                                <a href="index.php?route=show&id=<?= escape($product['id']) ?>"
                                     class="btn btn-sm btn-outline-secondary" title="Ver">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                <a href="index.php?route=edit&id=<?= e($product['id']) ?>"
+                                <a href="index.php?route=edit&id=<?= escape($product['id']) ?>"
                                     class="btn btn-sm btn-outline-primary" title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form action="index.php?route=delete" method="post" class="d-inline"
                                     onsubmit="return confirm('Excluir este produto?');">
-                                    <input type="hidden" name="id" value="<?= e($product['id']) ?>">
+                                    <input type="hidden" name="id" value="<?= escape($product['id']) ?>">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
                                         <i class="bi bi-trash"></i>
                                     </button>

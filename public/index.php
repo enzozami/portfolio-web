@@ -9,6 +9,8 @@ $routes = [
     'GET' => [
         'index' => 'index',
         'show' => 'show',
+        'create' => 'create',
+        'edit' => 'edit',
     ],
     'POST' => [
         'store'  => 'store',
@@ -30,14 +32,17 @@ $controller = new ProductController(
     new DeleteProductAction($pdo)
 );
 
-match ($handler) {
+$data = match ($handler) {
     'index' => $controller->index($_GET),
-    'show' => $controller->show((int) ($_GET['id'])),
-    'form' => $controller->form(),
+    'show' => $controller->show((int) ($_GET['id'] ?? 0)),
+    'create' => $controller->create(),
+    'edit' => $controller->edit((int) ($_GET['id'] ?? 0)),
     'store' => $controller->store($_POST),
-    'update' => $controller->update((int) ($_POST['id']), $_POST),
-    'delete' => $controller->destroy((int) ($_POST['id'])),
+    'update' => $controller->update((int) ($_POST['id'] ?? 0), $_POST),
+    'delete' => $controller->destroy((int) ($_POST['id'] ?? 0)),
     default => $controller->index($_GET),
 };
+
+extract($data);
 
 require __DIR__ . '/views/layout.php';
