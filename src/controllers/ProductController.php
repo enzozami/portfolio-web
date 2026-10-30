@@ -6,13 +6,8 @@ require_once __DIR__ . '/../actions/FindProductAction.php';
 require_once __DIR__ . '/../actions/UpdateProductAction.php';
 require_once __DIR__ . '/../actions/DeleteProductAction.php';
 
-/**
- * Recebe os dados da requisição, valida, chama a action certa e devolve
- * para o index.php os dados que a view precisa. Não gera HTML.
- */
 class ProductController
 {
-    // Código de erro do MySQL para valor repetido em coluna UNIQUE (a marca)
     private const DUPLICATE_ENTRY = 1062;
 
     public function __construct(
@@ -23,9 +18,9 @@ class ProductController
         private DeleteProductAction $deleteAction,
     ) {}
 
+    // Lista os produtos com filtro de status e ordenação
     public function index(array $params): array
     {
-        // Tudo que vem da URL é string: o filter_var converte "1", "true", "on"... em booleano
         $sortBy = $params['sortBy'] ?? 'nome';
         $descending = filter_var($params['descending'] ?? false, FILTER_VALIDATE_BOOLEAN);
         $active = filter_var($params['ativo'] ?? true, FILTER_VALIDATE_BOOLEAN);
@@ -38,6 +33,7 @@ class ProductController
         return ['products' => $list, 'sortBy' => $sortBy, 'descending' => $descending, 'active' => $active];
     }
 
+    // Valida e cadastra um novo produto
     public function store(array $params): never
     {
         $errors = $this->validate($params, isEdit: false);
@@ -56,11 +52,13 @@ class ProductController
         redirect('index.php');
     }
 
+    // Busca um produto para a tela de detalhes
     public function show(int $id): array
     {
         return ['product' => $this->findAction->handle($id)];
     }
 
+    // Valida e atualiza um produto existente
     public function update(int $id, array $input): never
     {
         $errors = $this->validate($input, isEdit: true);
@@ -80,6 +78,7 @@ class ProductController
         redirect('index.php');
     }
 
+    // Exclui um produto
     public function destroy(int $id): never
     {
         $this->deleteAction->handle($id);
@@ -87,11 +86,7 @@ class ProductController
         redirect('index.php');
     }
 
-    /**
-     * Regras de validação do produto. As mesmas regras existem em
-     * public/assets/js/form-validation.js, mas só esta é garantida:
-     * o JavaScript pode ser desativado ou burlado.
-     */
+    // Valida os campos do produto e retorna os erros encontrados
     private function validate(array $input, bool $isEdit): array
     {
         $errors = [];
@@ -101,7 +96,6 @@ class ProductController
         $cor = trim($input['cor'] ?? '');
         $valor = filter_var($input['valor'] ?? null, FILTER_VALIDATE_FLOAT);
 
-        // mb_strlen conta caracteres; strlen contaria bytes ("ç" vale 2)
         if ($nome === '') {
             $errors['nome'] = 'O nome do produto é obrigatório.';
         } elseif (mb_strlen($nome) < 3) {
@@ -118,7 +112,6 @@ class ProductController
             $errors['marca'] = 'A marca do produto deve ter no máximo 100 caracteres.';
         }
 
-        // Na edição a senha é opcional: em branco mantém a atual
         if (!$isEdit && $senha === '') {
             $errors['senha'] = 'A senha do produto é obrigatória.';
         } elseif ($senha !== '' && mb_strlen($senha) < 8) {
@@ -131,7 +124,6 @@ class ProductController
             $errors['cor'] = 'A cor do produto deve ter no máximo 50 caracteres.';
         }
 
-        // DECIMAL(10, 2) aceita no máximo 99.999.999,99
         if ($valor === false || $valor <= 0) {
             $errors['valor'] = 'O valor do produto é inválido.';
         } elseif ($valor > 99999999.99) {
@@ -141,12 +133,14 @@ class ProductController
         return $errors;
     }
 
+    // Prepara o formulário de cadastro
     public function create(): array
     {
         $product = ['nome' => '', 'marca' => '',  'cor' => '', 'valor' => '', 'ativo' => 1];
         return ['product' => $this->withOldInput($product), 'isEdit' => false, 'errors' => getFormErrors()];
     }
 
+    // Prepara o formulário de edição com os dados do produto
     public function edit(int $id): array
     {
         $product = $this->findAction->handle($id);
@@ -158,9 +152,7 @@ class ProductController
         return ['product' => $product, 'isEdit' => true, 'errors' => getFormErrors()];
     }
 
-    /**
-     * Volta ao formulário com os erros e o que o usuário digitou.
-     */
+    // Volta ao formulário com os erros e o que o usuário digitou
     private function backToForm(string $url, array $errors, array $input): never
     {
         setFormErrors($errors);
@@ -168,10 +160,7 @@ class ProductController
         redirect($url);
     }
 
-    /**
-     * Transforma o erro de marca duplicada em erro de formulário. Qualquer
-     * outro erro do banco é relançado, para não ser escondido.
-     */
+    // Trata o erro de marca duplicada como erro de formulário
     private function handleDuplicate(PDOException $e, string $url, array $input): never
     {
         if (($e->errorInfo[1] ?? null) !== self::DUPLICATE_ENTRY) {
@@ -181,9 +170,7 @@ class ProductController
         $this->backToForm($url, ['marca' => 'Esta marca já está cadastrada.'], $input);
     }
 
-    /**
-     * Sobrescreve os dados do produto com o que o usuário digitou antes de um erro de validação.
-     */
+    // Preenche o produto com o que o usuário digitou antes do erro
     private function withOldInput(array $product): array
     {
         $old = getOldInput();
@@ -192,10 +179,8 @@ class ProductController
             return $product;
         }
 
-        // O id vem do banco, nunca do formulário
         unset($old['id']);
 
-        // Checkbox desmarcado não é enviado, então a ausência da chave significa "inativo"
         $old['ativo'] = !empty($old['ativo']) ? 1 : 0;
 
         return array_merge($product, $old);

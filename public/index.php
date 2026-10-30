@@ -23,6 +23,11 @@ $route = $_GET['route'] ?? 'index';
 $method = $_SERVER['REQUEST_METHOD'];
 $handler = $routes[$method][$route] ?? 'index';
 
+// Recusa requisições POST sem o token CSRF válido
+if ($method === 'POST') {
+    verifyCsrf();
+}
+
 $pdo = connection();
 $controller = new ProductController(
     new ListProductAction($pdo),
