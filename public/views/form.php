@@ -1,14 +1,4 @@
 <?php
-
-/**
- * Formulário de cadastro e edição de produto (o mesmo arquivo serve aos dois).
- *
- * Variáveis vindas do controller (ProductController::create / edit):
- * @var bool        $isEdit  true na edição, false no cadastro
- * @var array|false $product Dados para preencher os campos (false se o id não existe)
- * @var array       $errors  Erros de validação do PHP, indexados pelo nome do campo
- */
-
 $action = $isEdit ? "index.php?route=update" : "index.php?route=store";
 
 if (!$product) {
@@ -16,11 +6,6 @@ if (!$product) {
     return;
 }
 
-/**
- * Atributos de erro de um campo: classe do Bootstrap e aria-invalid para leitores de tela.
- * Cada campo tem uma div "{campo}-feedback" sempre presente, que o PHP preenche ao
- * voltar com erro e o form-validation.js preenche enquanto o usuário digita.
- */
 $invalid = fn(string $field): string => isset($errors[$field]) ? 'is-invalid' : '';
 $ariaInvalid = fn(string $field): string => isset($errors[$field]) ? 'aria-invalid="true"' : '';
 ?>
@@ -32,11 +17,11 @@ $ariaInvalid = fn(string $field): string => isset($errors[$field]) ? 'aria-inval
                 <h1 class="h4 mb-4"><?= $isEdit ? 'Editar produto' : 'Novo produto' ?></h1>
 
                 <!-- novalidate desliga os balões nativos do navegador: quem valida é o form-validation.js -->
-                <form action="<?= escape($action) ?>" method="post" class="row g-3" novalidate
-                    data-validate data-is-edit="<?= $isEdit ? 'true' : 'false' ?>">
+                <form action="<?= escape($action) ?>" method="post" class="row g-3" novalidate data-validate
+                    data-is-edit="<?= $isEdit ? 'true' : 'false' ?>">
                     <?= csrfField() ?>
                     <?php if ($isEdit): ?>
-                        <input type="hidden" name="id" value="<?= escape($product['id']) ?>">
+                    <input type="hidden" name="id" value="<?= escape($product['id']) ?>">
                     <?php endif; ?>
 
                     <div class="col-md-6">
@@ -67,10 +52,11 @@ $ariaInvalid = fn(string $field): string => isset($errors[$field]) ? 'aria-inval
                                 aria-label="Mostrar senha" aria-pressed="false">
                                 <i class="bi bi-eye" aria-hidden="true"></i>
                             </button>
-                            <div class="invalid-feedback" id="senha-feedback"><?= escape($errors['senha'] ?? '') ?></div>
+                            <div class="invalid-feedback" id="senha-feedback"><?= escape($errors['senha'] ?? '') ?>
+                            </div>
                         </div>
                         <?php if ($isEdit): ?>
-                            <div class="form-text" id="senha-help">Deixe em branco para manter a senha atual.</div>
+                        <div class="form-text" id="senha-help">Deixe em branco para manter a senha atual.</div>
                         <?php endif; ?>
                     </div>
 
@@ -88,8 +74,10 @@ $ariaInvalid = fn(string $field): string => isset($errors[$field]) ? 'aria-inval
                             <span class="input-group-text">R$</span>
                             <input type="number" id="valor" name="valor" class="form-control <?= $invalid('valor') ?>"
                                 value="<?= escape($product['valor']) ?>" step="0.01" min="0.01" max="99999999.99"
-                                inputmode="decimal" required aria-describedby="valor-feedback" <?= $ariaInvalid('valor') ?>>
-                            <div class="invalid-feedback" id="valor-feedback"><?= escape($errors['valor'] ?? '') ?></div>
+                                inputmode="decimal" required aria-describedby="valor-feedback"
+                                <?= $ariaInvalid('valor') ?>>
+                            <div class="invalid-feedback" id="valor-feedback"><?= escape($errors['valor'] ?? '') ?>
+                            </div>
                         </div>
                     </div>
 

@@ -1,15 +1,4 @@
 <?php
-
-/**
- * Estrutura comum a todas as páginas: cabeçalho, mensagens, conteúdo, rodapé
- * e o modal de confirmação de exclusão.
- *
- * Variáveis vindas do index.php:
- * @var string     $handler Ação executada (index, show, create, edit)
- * @var array|null $flash   Mensagem de retorno da ação anterior
- */
-
-// Título da aba do navegador conforme a página
 $pageTitle = match ($handler) {
     'create' => 'Novo produto',
     'edit' => !empty($product) ? 'Editar: ' . $product['nome'] : 'Produto não encontrado',
@@ -49,28 +38,28 @@ $pageTitle = match ($handler) {
     <main class="flex-grow-1">
         <div class="container py-4">
             <?php if ($flash): ?>
-                <div class="alert alert-<?= escape($flash['type']) ?> alert-dismissible fade show" role="alert"
-                    data-autodismiss>
-                    <?= escape($flash['message']) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
-                </div>
+            <div class="alert alert-<?= escape($flash['type']) ?> alert-dismissible fade show" role="alert"
+                data-autodismiss>
+                <?= escape($flash['message']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+            </div>
             <?php endif; ?>
 
             <?php if ($handler === 'index'): ?>
-                <?php require __DIR__ . '/list.php'; ?>
+            <?php require __DIR__ . '/list.php'; ?>
             <?php elseif (in_array($handler, ['create', 'edit'])): ?>
-                <?php require __DIR__ . '/form.php'; ?>
+            <?php require __DIR__ . '/form.php'; ?>
             <?php elseif ($handler === 'show'): ?>
-                <?php require __DIR__ . '/show.php'; ?>
+            <?php require __DIR__ . '/show.php'; ?>
             <?php endif; ?>
         </div>
     </main>
 
     <?php if ($handler === 'index'): ?>
-        <!-- Botão flutuante: fica fixo no canto da tela, só na listagem -->
-        <a class="btn btn-primary fab" href="index.php?route=create" title="Novo produto" aria-label="Novo produto">
-            <i class="bi bi-plus-lg" aria-hidden="true"></i>
-        </a>
+    <!-- Botão flutuante: fica fixo no canto da tela, só na listagem -->
+    <a class="btn btn-primary fab" href="index.php?route=create" title="Novo produto" aria-label="Novo produto">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+    </a>
     <?php endif; ?>
 
     <footer class="site-footer py-3 text-center small">

@@ -1,9 +1,3 @@
-<?php
-
-/**
- * Exibida pelo show.php e pelo form.php quando o id do produto não existe.
- */
-?>
 <div class="text-center py-5">
     <i class="bi bi-search fs-1 text-muted d-block mb-3" aria-hidden="true"></i>
     <h1 class="h4">Produto não encontrado</h1>

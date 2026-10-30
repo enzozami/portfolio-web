@@ -1,12 +1,4 @@
 <?php
-
-/**
- * Detalhes de um produto.
- *
- * Variáveis vindas do controller (ProductController::show):
- * @var array|false $product Produto encontrado, ou false se o id não existe
- */
-
 if (!$product) {
     require __DIR__ . '/not-found.php';
     return;
@@ -49,8 +41,8 @@ if (!$product) {
                     <a href="index.php?route=edit&id=<?= escape($product['id']) ?>" class="btn btn-primary">
                         <i class="bi bi-pencil" aria-hidden="true"></i> Editar
                     </a>
-                    <form action="index.php?route=delete" method="post"
-                        data-delete-form data-product-name="<?= escape($product['nome']) ?>">
+                    <form action="index.php?route=delete" method="post" data-delete-form
+                        data-product-name="<?= escape($product['nome']) ?>">
                         <?= csrfField() ?>
                         <input type="hidden" name="id" value="<?= escape($product['id']) ?>">
                         <button type="submit" class="btn btn-outline-danger w-100">

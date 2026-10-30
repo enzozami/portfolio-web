@@ -45,4 +45,6 @@ $data = match ($handler) {
 
 extract($data);
 
+$flash = getFlash();
+
 require __DIR__ . '/views/layout.php';
