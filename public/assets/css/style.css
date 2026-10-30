@@ -1,0 +1,168 @@
+/*
+ * Tech Store: estilos próprios.
+ *
+ * Carregado depois do Bootstrap: aqui ficam a identidade visual (cores, fonte)
+ * e os componentes que o Bootstrap não tem pronto (botão flutuante, cabeçalho).
+ */
+
+/* ---------- Identidade visual ---------- */
+:root {
+    /* Paleta: azul-ardósia escuro (tecnologia, sobriedade) + índigo como cor de ação */
+    --ts-dark: #1e293b;
+    --ts-dark-2: #334155;
+    --ts-primary: #4f46e5;
+    --ts-primary-hover: #4338ca;
+    --ts-bg: #f1f5f9;
+    --ts-surface: #ffffff;
+    --ts-border: #e2e8f0;
+    --ts-muted: #64748b;
+    --ts-radius: 0.75rem;
+
+    /* Fonte Inter (Google Fonts) para todo o Bootstrap */
+    --bs-body-font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --bs-body-bg: var(--ts-bg);
+    --bs-link-color-rgb: 79, 70, 229;
+    --bs-link-hover-color-rgb: 67, 56, 202;
+}
+
+body {
+    background-color: var(--ts-bg);
+}
+
+/* Botão primário do Bootstrap com a cor da marca */
+.btn-primary {
+    --bs-btn-bg: var(--ts-primary);
+    --bs-btn-border-color: var(--ts-primary);
+    --bs-btn-hover-bg: var(--ts-primary-hover);
+    --bs-btn-hover-border-color: var(--ts-primary-hover);
+    --bs-btn-active-bg: var(--ts-primary-hover);
+    --bs-btn-active-border-color: var(--ts-primary-hover);
+    --bs-btn-disabled-bg: var(--ts-primary);
+    --bs-btn-disabled-border-color: var(--ts-primary);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--ts-primary);
+    --bs-btn-border-color: var(--ts-primary);
+    --bs-btn-hover-bg: var(--ts-primary);
+    --bs-btn-hover-border-color: var(--ts-primary);
+    --bs-btn-active-bg: var(--ts-primary-hover);
+}
+
+/* Anel de foco visível e na cor da marca (acessibilidade para quem navega pelo teclado) */
+.form-control:focus,
+.form-check-input:focus,
+.btn:focus-visible {
+    border-color: var(--ts-primary);
+    box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--ts-primary);
+    border-color: var(--ts-primary);
+}
+
+/* ---------- Cabeçalho e rodapé ---------- */
+.site-header {
+    background: linear-gradient(135deg, var(--ts-dark), var(--ts-dark-2));
+}
+
+.site-header .navbar-brand,
+.site-header .navbar-brand:hover {
+    color: #fff;
+    letter-spacing: -0.01em;
+}
+
+.site-header .navbar-brand .bi {
+    color: #a5b4fc;
+}
+
+.site-header .navbar-text {
+    color: #cbd5e1;
+}
+
+.site-footer {
+    background-color: var(--ts-surface);
+    border-top: 1px solid var(--ts-border);
+    color: var(--ts-muted);
+}
+
+/* ---------- Cards, tabela e estados ---------- */
+.card,
+.table-card,
+.empty-state {
+    background-color: var(--ts-surface);
+    border-radius: var(--ts-radius);
+}
+
+.table-card {
+    overflow: hidden;
+}
+
+.table thead th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ts-muted);
+    white-space: nowrap;
+}
+
+.sort-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.sort-link:hover {
+    color: var(--ts-primary);
+}
+
+/* ---------- Botão flutuante (FAB) ---------- */
+.fab {
+    /* fixed: sai do fluxo da página e fica preso ao canto da janela, mesmo rolando */
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 1030;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fab:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.45);
+}
+
+/* Espaço no fim da página para o FAB não cobrir o último item da tabela */
+main:has(+ .fab) {
+    padding-bottom: 5rem;
+}
+
+/* ---------- Responsividade ---------- */
+@media (max-width: 575.98px) {
+    .fab {
+        right: 1rem;
+        bottom: 1rem;
+    }
+
+    .card-body {
+        padding: 1.25rem !important;
+    }
+}
+
+/* Respeita quem pediu menos animação no sistema operacional */
+@media (prefers-reduced-motion: reduce) {
+    .fab {
+        transition: none;
+    }
+
+    .fab:hover {
+        transform: none;
+    }
+}
