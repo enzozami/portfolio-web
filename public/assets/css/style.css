@@ -1,71 +1,15 @@
-
-:root {
-    --ts-dark: #1e293b;
-    --ts-dark-2: #334155;
-    --ts-primary: #4f46e5;
-    --ts-primary-hover: #4338ca;
-    --ts-bg: #f1f5f9;
-    --ts-surface: #ffffff;
-    --ts-border: #e2e8f0;
-    --ts-muted: #64748b;
-    --ts-radius: 0.75rem;
-
-    --bs-body-font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --bs-body-bg: var(--ts-bg);
-    --bs-link-color-rgb: 79, 70, 229;
-    --bs-link-hover-color-rgb: 67, 56, 202;
-}
-
 body {
-    background-color: var(--ts-bg);
+    font-family: "Inter", Arial, sans-serif;
+    background-color: #f1f5f9;
 }
 
-/* Botão primário do Bootstrap com a cor da marca */
-.btn-primary {
-    --bs-btn-bg: var(--ts-primary);
-    --bs-btn-border-color: var(--ts-primary);
-    --bs-btn-hover-bg: var(--ts-primary-hover);
-    --bs-btn-hover-border-color: var(--ts-primary-hover);
-    --bs-btn-active-bg: var(--ts-primary-hover);
-    --bs-btn-active-border-color: var(--ts-primary-hover);
-    --bs-btn-disabled-bg: var(--ts-primary);
-    --bs-btn-disabled-border-color: var(--ts-primary);
-}
-
-.btn-outline-primary {
-    --bs-btn-color: var(--ts-primary);
-    --bs-btn-border-color: var(--ts-primary);
-    --bs-btn-hover-bg: var(--ts-primary);
-    --bs-btn-hover-border-color: var(--ts-primary);
-    --bs-btn-active-bg: var(--ts-primary-hover);
-}
-
-/* Anel de foco visível e na cor da marca (acessibilidade para quem navega pelo teclado) */
-.form-control:focus,
-.form-check-input:focus,
-.btn:focus-visible {
-    border-color: var(--ts-primary);
-    box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.25);
-}
-
-.form-check-input:checked {
-    background-color: var(--ts-primary);
-    border-color: var(--ts-primary);
-}
-
-/* ---------- Cabeçalho e rodapé ---------- */
+/* Cabeçalho e rodapé */
 .site-header {
-    background: linear-gradient(135deg, var(--ts-dark), var(--ts-dark-2));
+    background-color: #1e293b;
 }
 
-.site-header .navbar-brand,
-.site-header .navbar-brand:hover {
-    color: #fff;
-    letter-spacing: -0.01em;
-}
-
-.site-header .navbar-brand .bi {
-    color: #a5b4fc;
+.site-header .navbar-brand {
+    color: #ffffff;
 }
 
 .site-header .navbar-text {
@@ -73,84 +17,90 @@ body {
 }
 
 .site-footer {
-    background-color: var(--ts-surface);
-    border-top: 1px solid var(--ts-border);
-    color: var(--ts-muted);
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
 }
 
-/* ---------- Cards, tabela e estados ---------- */
+/* Botões e campos com a cor principal */
+.btn-primary {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+}
+
+.btn-primary:hover {
+    background-color: #4338ca;
+    border-color: #4338ca;
+}
+
+.btn-outline-primary {
+    color: #4f46e5;
+    border-color: #4f46e5;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+}
+
+.form-check-input:checked {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+}
+
+/* Cards e tabela */
 .card,
 .table-card,
 .empty-state {
-    background-color: var(--ts-surface);
-    border-radius: var(--ts-radius);
+    background-color: #ffffff;
+    border-radius: 12px;
 }
 
 .table-card {
-    overflow: hidden;
+    overflow-x: auto;
 }
 
-.table thead th {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--ts-muted);
-    white-space: nowrap;
+.table th {
+    font-size: 14px;
+    color: #64748b;
 }
 
 .sort-link {
-    color: inherit;
+    color: #64748b;
     text-decoration: none;
 }
 
 .sort-link:hover {
-    color: var(--ts-primary);
+    color: #4f46e5;
 }
 
-/* ---------- Botão flutuante (FAB) ---------- */
+/* Botão flutuante fixo no canto da tela */
 .fab {
     position: fixed;
-    right: 1.5rem;
-    bottom: 1.5rem;
-    z-index: 1030;
+    right: 24px;
+    bottom: 24px;
     width: 56px;
     height: 56px;
     border-radius: 50%;
+    font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.fab:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.45);
+main {
+    padding-bottom: 80px;
 }
 
-main:has(+ .fab) {
-    padding-bottom: 5rem;
-}
-
-/* ---------- Responsividade ---------- */
-@media (max-width: 575.98px) {
+/* Celular */
+@media (max-width: 576px) {
     .fab {
-        right: 1rem;
-        bottom: 1rem;
+        right: 16px;
+        bottom: 16px;
     }
 
-    .card-body {
-        padding: 1.25rem !important;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .fab {
-        transition: none;
-    }
-
-    .fab:hover {
-        transform: none;
+    .table td,
+    .table th {
+        padding: 8px 6px;
     }
 }
