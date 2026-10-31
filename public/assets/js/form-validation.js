@@ -1,4 +1,5 @@
-(() => {
+// Valida o formulário de produto antes de enviar
+function setupFormValidation() {
     const form = document.querySelector('form[data-validate]');
 
     if (!form) {
@@ -6,103 +7,106 @@
     }
 
     const isEdit = form.dataset.isEdit === 'true';
+    const fields = ['nome', 'marca', 'senha', 'cor', 'valor'];
 
-    const length = (text) => [...text].length;
-
-    const textRule = (label, { required, min = 0, max }) => (value) => {
+    // Retorna a mensagem de erro do campo, ou '' se estiver válido
+    function getError(name, value) {
         const text = value.trim();
 
-        if (text === '') {
-            return `${label} é ${required}.`;
+        if (name === 'nome') {
+            if (text === '') return 'O nome do produto é obrigatório.';
+            if (text.length < 3) return 'O nome do produto deve ter pelo menos 3 caracteres.';
+            if (text.length > 100) return 'O nome do produto deve ter no máximo 100 caracteres.';
         }
-        if (min && length(text) < min) {
-            return `${label} deve ter pelo menos ${min} caracteres.`;
+
+        if (name === 'marca') {
+            if (text === '') return 'A marca do produto é obrigatória.';
+            if (text.length < 3) return 'A marca do produto deve ter pelo menos 3 caracteres.';
+            if (text.length > 100) return 'A marca do produto deve ter no máximo 100 caracteres.';
         }
-        if (length(text) > max) {
-            return `${label} deve ter no máximo ${max} caracteres.`;
+
+        if (name === 'senha') {
+            if (!isEdit && value === '') return 'A senha do produto é obrigatória.';
+            if (value !== '' && value.length < 8) return 'A senha do produto deve ter pelo menos 8 caracteres.';
         }
+
+        if (name === 'cor') {
+            if (text === '') return 'A cor do produto é obrigatória.';
+            if (text.length > 50) return 'A cor do produto deve ter no máximo 50 caracteres.';
+        }
+
+        if (name === 'valor') {
+            const number = Number(value);
+            if (text === '' || isNaN(number) || number <= 0) return 'O valor do produto é inválido.';
+            if (number > 99999999.99) return 'O valor máximo é R$ 99.999.999,99.';
+        }
+
         return '';
-    };
+    }
 
-    const rules = {
-        nome: textRule('O nome do produto', { required: 'obrigatório', min: 3, max: 100 }),
-        marca: textRule('A marca do produto', { required: 'obrigatória', min: 3, max: 100 }),
-        cor: textRule('A cor do produto', { required: 'obrigatória', max: 50 }),
-        senha: (value) => {
-            if (!isEdit && value === '') {
-                return 'A senha do produto é obrigatória.';
-            }
-            if (value !== '' && length(value) < 8) {
-                return 'A senha do produto deve ter pelo menos 8 caracteres.';
-            }
-            return '';
-        },
-        valor: (value) => {
-            const number = Number(value.replace(',', '.'));
+    // Mostra ou esconde o erro embaixo do campo
+    function validateField(input) {
+        const message = getError(input.name, input.value);
+        const feedback = document.getElementById(input.id + '-feedback');
 
-            if (value.trim() === '' || !Number.isFinite(number) || number <= 0) {
-                return 'O valor do produto é inválido.';
-            }
-            if (number > 99999999.99) {
-                return 'O valor máximo é R$ 99.999.999,99.';
-            }
-            return '';
-        },
-    };
-
-    const showError = (input, message) => {
-        const feedback = document.getElementById(`${input.id}-feedback`);
-
-        input.classList.toggle('is-invalid', message !== '');
-        input.setAttribute('aria-invalid', message !== '' ? 'true' : 'false');
-
-        if (feedback) {
-            feedback.textContent = message;
+        if (message === '') {
+            input.classList.remove('is-invalid');
+            input.setAttribute('aria-invalid', 'false');
+        } else {
+            input.classList.add('is-invalid');
+            input.setAttribute('aria-invalid', 'true');
         }
-    };
 
-    const validateField = (input) => {
-        const message = rules[input.name](input.value);
-        showError(input, message);
+        feedback.textContent = message;
+
         return message === '';
-    };
+    }
 
-    const fields = Object.keys(rules)
-        .map((name) => form.elements[name])
-        .filter(Boolean);
+    fields.forEach(function (name) {
+        const input = form.elements[name];
 
-    const touched = new Set();
-
-    fields.forEach((input) => {
-        input.addEventListener('blur', () => {
-            touched.add(input);
+        input.addEventListener('blur', function () {
             validateField(input);
         });
 
-        input.addEventListener('input', () => {
-            if (touched.has(input) || input.classList.contains('is-invalid')) {
+        input.addEventListener('input', function () {
+            if (input.classList.contains('is-invalid')) {
                 validateField(input);
             }
         });
     });
 
-    form.addEventListener('submit', (event) => {
-        const invalid = fields.filter((input) => !validateField(input));
+    form.addEventListener('submit', function (event) {
+        let firstInvalid = null;
 
-        if (invalid.length > 0) {
+        fields.forEach(function (name) {
+            const input = form.elements[name];
+            const valid = validateField(input);
+
+            if (!valid && firstInvalid === null) {
+                firstInvalid = input;
+            }
+        });
+
+        if (firstInvalid !== null) {
             event.preventDefault();
-            invalid.forEach((input) => touched.add(input));
-            invalid[0].focus();
+            firstInvalid.focus();
             return;
         }
 
-        const submit = form.querySelector('[type="submit"]');
-        submit.disabled = true;
-        submit.textContent = 'Salvando...';
+        const button = form.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.textContent = 'Salvando...';
     });
 
-    form.addEventListener('reset', () => {
-        touched.clear();
-        fields.forEach((input) => showError(input, ''));
+    form.addEventListener('reset', function () {
+        fields.forEach(function (name) {
+            const input = form.elements[name];
+            input.classList.remove('is-invalid');
+            input.setAttribute('aria-invalid', 'false');
+            document.getElementById(input.id + '-feedback').textContent = '';
+        });
     });
-})();
+}
+
+setupFormValidation();

@@ -1,17 +1,14 @@
-(() => {
-    const DELAY_MS = 5000;
+// Fecha a mensagem de sucesso sozinha depois de 5 segundos
+function setupFlash() {
+    const alert = document.querySelector('.alert-success');
 
-    document.querySelectorAll('.alert[data-autodismiss]').forEach((alert) => {
-        if (alert.classList.contains('alert-danger')) {
-            return;
-        }
+    if (!alert) {
+        return;
+    }
 
-        setTimeout(() => {
-            if (window.bootstrap) {
-                bootstrap.Alert.getOrCreateInstance(alert).close();
-            } else {
-                alert.remove();
-            }
-        }, DELAY_MS);
-    });
-})();
+    setTimeout(function () {
+        alert.remove();
+    }, 5000);
+}
+
+setupFlash();

@@ -1,22 +1,25 @@
-(() => {
-    document.querySelectorAll('[data-toggle-password]').forEach((button) => {
-        const input = document.getElementById(button.dataset.togglePassword);
-        const icon = button.querySelector('.bi');
+// Mostra ou oculta a senha ao clicar no botão do olho
+function setupPasswordToggle() {
+    const button = document.querySelector('[data-toggle-password]');
 
-        if (!input) {
-            return;
+    if (!button) {
+        return;
+    }
+
+    const input = document.getElementById('senha');
+    const icon = button.querySelector('i');
+
+    button.addEventListener('click', function () {
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'bi bi-eye-slash';
+            button.setAttribute('aria-label', 'Ocultar senha');
+        } else {
+            input.type = 'password';
+            icon.className = 'bi bi-eye';
+            button.setAttribute('aria-label', 'Mostrar senha');
         }
-
-        button.addEventListener('click', () => {
-            const showing = input.type === 'password';
-
-            input.type = showing ? 'text' : 'password';
-            icon.classList.toggle('bi-eye', !showing);
-            icon.classList.toggle('bi-eye-slash', showing);
-
-            // Mantém o estado acessível para leitores de tela
-            button.setAttribute('aria-pressed', String(showing));
-            button.setAttribute('aria-label', showing ? 'Ocultar senha' : 'Mostrar senha');
-        });
     });
-})();
+}
+
+setupPasswordToggle();

@@ -1,42 +1,31 @@
-(() => {
-    const forms = document.querySelectorAll('form[data-delete-form]');
+// Pede confirmação em um modal antes de excluir um produto
+function setupDeleteConfirm() {
     const modalElement = document.getElementById('delete-modal');
+    const forms = document.querySelectorAll('form[data-delete-form]');
 
-    if (forms.length === 0 || !modalElement) {
+    // Sem o Bootstrap carregado, o formulário é enviado normalmente
+    if (typeof bootstrap === 'undefined') {
         return;
     }
 
-    let pendingForm = null;
+    const modal = new bootstrap.Modal(modalElement);
+    const productName = modalElement.querySelector('[data-delete-name]');
+    const confirmButton = modalElement.querySelector('[data-delete-confirm]');
+    let selectedForm = null;
 
-    forms.forEach((form) => {
-        form.addEventListener('submit', (event) => {
+    forms.forEach(function (form) {
+        form.addEventListener('submit', function (event) {
             event.preventDefault();
-
-            if (!window.bootstrap) {
-                if (window.confirm('Excluir este produto?')) {
-                    form.submit();
-                }
-                return;
-            }
-
-            pendingForm = form;
-            modalElement.querySelector('[data-delete-name]').textContent = form.dataset.productName;
-            bootstrap.Modal.getOrCreateInstance(modalElement).show();
+            selectedForm = form;
+            productName.textContent = form.dataset.productName;
+            modal.show();
         });
     });
 
-    modalElement.querySelector('[data-delete-confirm]').addEventListener('click', (event) => {
-        if (!pendingForm) {
-            return;
-        }
-
-        event.currentTarget.disabled = true;
-
-        pendingForm.submit();
+    confirmButton.addEventListener('click', function () {
+        confirmButton.disabled = true;
+        selectedForm.submit();
     });
+}
 
-    // Fechou sem confirmar: esquece o formulário pendente
-    modalElement.addEventListener('hidden.bs.modal', () => {
-        pendingForm = null;
-    });
-})();
+setupDeleteConfirm();
