@@ -8,6 +8,13 @@ $columns = [
     'valor' => 'Valor',
 ];
 
+// Colunas escondidas em telas pequenas, para as ações caberem no celular
+$responsive = [
+    'id' => 'd-none d-sm-table-cell',
+    'marca' => 'd-none d-md-table-cell',
+    'cor' => 'd-none d-md-table-cell',
+];
+
 $sortUrl = function (string $column) use ($sortBy, $descending, $active): string {
     return 'index.php?' . http_build_query([
         'route' => 'index',
@@ -60,7 +67,7 @@ $sortUrl = function (string $column) use ($sortBy, $descending, $active): string
             <thead class="table-light">
                 <tr>
                     <?php foreach ($columns as $column => $label): ?>
-                    <th scope="col"
+                    <th scope="col" class="<?= $responsive[$column] ?? '' ?>"
                         <?= $column === $sortBy ? 'aria-sort="' . ($descending ? 'descending' : 'ascending') . '"' : '' ?>>
                         <a href="<?= escape($sortUrl($column)) ?>" class="sort-link">
                             <?= escape($label) ?>
@@ -76,10 +83,13 @@ $sortUrl = function (string $column) use ($sortBy, $descending, $active): string
             <tbody>
                 <?php foreach ($products as $product): ?>
                 <tr data-search="<?= escape($product['nome'] . ' ' . $product['marca'] . ' ' . $product['cor']) ?>">
-                    <td><?= escape($product['id']) ?></td>
-                    <td class="fw-medium"><?= escape($product['nome']) ?></td>
-                    <td><?= escape($product['marca']) ?></td>
-                    <td><?= escape($product['cor']) ?></td>
+                    <td class="<?= $responsive['id'] ?>"><?= escape($product['id']) ?></td>
+                    <td class="fw-medium">
+                        <?= escape($product['nome']) ?>
+                        <div class="small text-muted fw-normal d-md-none"><?= escape($product['marca']) ?></div>
+                    </td>
+                    <td class="<?= $responsive['marca'] ?>"><?= escape($product['marca']) ?></td>
+                    <td class="<?= $responsive['cor'] ?>"><?= escape($product['cor']) ?></td>
                     <td class="text-nowrap">R$ <?= number_format((float) $product['valor'], 2, ',', '.') ?></td>
                     <td class="text-end text-nowrap">
                         <a href="index.php?route=show&id=<?= escape($product['id']) ?>"
